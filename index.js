@@ -1,3 +1,4 @@
+const Buffer = require('buffer').Buffer;
 const Headers = require('fetch-headers')
 const getStatus = require('statuses')
 const bodyToIterator = require('fetch-request-body-to-async-iterator')
