@@ -1,8 +1,8 @@
-const Buffer = require('buffer').Buffer;
 const Headers = require('fetch-headers')
 const getStatus = require('statuses')
 const bodyToIterator = require('fetch-request-body-to-async-iterator')
 const { TransformStream } = require('web-streams-polyfill/ponyfill/es6')
+import { concat } from 'uint8arrays/concat';
 
 module.exports = function makeFetch (handler) {
   return async function fetch (resource, init = {}) {
@@ -40,7 +40,9 @@ module.exports = function makeFetch (handler) {
       body,
       referrer,
       signal
-    })
+    });
+
+    console.log(statusCode, rawStatusText, rawResponseHeaders, data);
 
     const responseHeaders = new Headers(rawResponseHeaders || {})
     const statusText = rawStatusText || getStatus(statusCode)
@@ -112,8 +114,10 @@ function headersToObject (headers) {
 async function collectBuffers (iterable) {
   const all = []
   for await (const buff of iterable) {
-    all.push(Buffer.from(buff))
+    all.push(buff)
   }
 
-  return Buffer.concat(all)
+  console.log(all);
+
+  return concat(all)
 }
